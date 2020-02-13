@@ -1,4 +1,4 @@
 export enum FlightType {
-	Cheap = "Cheap",
-	Business = "Business"
+	Cheap = "cheap",
+	Business = "business"
 }

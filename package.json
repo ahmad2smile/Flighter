@@ -42,6 +42,7 @@
     "@types/react-redux": "^7.1.7",
     "@types/redux-form": "^8.2.1",
     "prettier": "^1.19.1",
+    "redux-devtools-extension": "^2.13.8",
     "tslint": "^6.0.0",
     "typescript": "^3.7.5"
   }

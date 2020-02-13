@@ -1,6 +1,5 @@
 import axios, { Canceler } from "axios";
-import { FlightType } from "../models/FlightType";
-import { Flight } from "../models/Flight";
+import { RawBusinessFlight, RawCheapFlight } from "../models/RawFlight";
 
 const appBaseUrl = "https://tokigames-challenge.herokuapp.com/api/flights/";
 
@@ -10,7 +9,6 @@ const api = axios.create({
 });
 
 const CancelToken = axios.CancelToken;
-let cancel: Canceler;
 
 export const apiErrorHandler = (callBack: (error: string) => void) => (
 	error: any
@@ -27,17 +25,34 @@ export const apiErrorHandler = (callBack: (error: string) => void) => (
 	}
 };
 
-export const getFlights = async (
-	flightType: FlightType
-): Promise<Readonly<Flight>> => {
+let getBusinessFlightsCancel: Canceler;
+
+export const getBusinessFlights = async (): Promise<Readonly<
+	RawBusinessFlight
+>> => {
 	// cancel previous requests
-	if (cancel) {
-		cancel();
+	if (getBusinessFlightsCancel) {
+		getBusinessFlightsCancel();
 	}
 
-	const response = await api.get(`/${flightType}`, {
-		cancelToken: new CancelToken(c => (cancel = c))
+	const response = await api.get(`/business`, {
+		cancelToken: new CancelToken(c => (getBusinessFlightsCancel = c))
 	});
 
-	return response.data;
+	return response.data.data;
+};
+
+let getCheapFlightsCancel: Canceler;
+
+export const getCheapFlights = async (): Promise<Readonly<RawCheapFlight>> => {
+	// cancel previous requests
+	if (getCheapFlightsCancel) {
+		getCheapFlightsCancel();
+	}
+
+	const response = await api.get(`/cheap`, {
+		cancelToken: new CancelToken(c => (getCheapFlightsCancel = c))
+	});
+
+	return response.data.data;
 };

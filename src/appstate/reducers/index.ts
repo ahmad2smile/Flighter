@@ -2,7 +2,7 @@ import { persistCombineReducers } from "redux-persist";
 import { reducer as formReducer } from "redux-form";
 import storage from "redux-persist/lib/storage";
 
-import { flightsReducer as flights } from "./flights/flightReducer";
+import { flightsReducer as flightState } from "./flights/flightReducer";
 
 // Setup for Redux Persist
 export default persistCombineReducers(
@@ -13,6 +13,6 @@ export default persistCombineReducers(
 	},
 	{
 		form: formReducer,
-		flights
+		flightState
 	}
 );

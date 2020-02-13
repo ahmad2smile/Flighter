@@ -1,24 +1,34 @@
-import { call, takeLatest, put } from "redux-saga/effects";
+import { call, takeLatest, put, all } from "redux-saga/effects";
 
 import {
 	flightsGetSuccess,
 	flightsGetError,
-	FlightActionTypes,
-	FlightsGetAction
+	FlightActionTypes
 } from "../../actions/flights/flightActions";
 
-import { getFlights } from "../../../services/dataService";
+import {
+	getBusinessFlights,
+	getCheapFlights
+} from "../../../services/dataService";
+
+import { formatFlights } from "./utils/formatFlights";
 import { FlightType } from "../../../models/FlightType";
-import { Flight } from "../../../models/Flight";
 
-export function* flightGetSaga(_action: FlightsGetAction) {
+export function* flightGetSaga() {
 	try {
-		const response = yield call(() => getFlights(FlightType.Business));
-		console.log("TCL: function*flightsGetSaga -> response", response);
+		const [rawBusinessFlights, rawCheapFlights] = yield all([
+			call(getBusinessFlights),
+			call(getCheapFlights)
+		]);
 
-		const flights: ReadonlyArray<Flight> = response.data;
+		const businessFlights = rawBusinessFlights.map(
+			formatFlights(FlightType.Business)
+		);
+		const cheapFlights = rawCheapFlights.map(
+			formatFlights(FlightType.Cheap)
+		);
 
-		yield put(flightsGetSuccess(flights));
+		yield put(flightsGetSuccess([...businessFlights, ...cheapFlights]));
 	} catch (err) {
 		yield put(flightsGetError(err));
 	}

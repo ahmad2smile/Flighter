@@ -33,14 +33,13 @@ export const flightsReducer = (
 		case FlightActionTypes.FLIGHT_GET_REQUEST_SUCCESS:
 			return {
 				...state,
-				...(action as FlightsGetSuccessAction).payload,
+				flights: (action as FlightsGetSuccessAction).payload,
 				flightRequestState: RequestTypes.SUCCESS
 			};
 		case FlightActionTypes.FLIGHT_GET_REQUEST_ERROR:
 			return {
 				...state,
-				flightRequestError:
-					(action as FlightsGetErrorAction).payload || "",
+				flightRequestError: (action as FlightsGetErrorAction).payload,
 				flightRequestState: RequestTypes.ERROR
 			};
 		default:
