@@ -5,5 +5,6 @@ export interface Flight {
 	arrival: string;
 	departureTime: number;
 	arrivalTime: number;
+	durationHours: number;
 	type: FlightType;
 }

@@ -9,6 +9,7 @@ describe("Filters Flights correctly", () => {
 			arrivalTime: 12345,
 			departure: "city2",
 			departureTime: 6789,
+			durationHours: 2,
 			type: FlightType.Business
 		},
 		{
@@ -16,6 +17,7 @@ describe("Filters Flights correctly", () => {
 			arrivalTime: 12345,
 			departure: "city4",
 			departureTime: 6789,
+			durationHours: 2,
 			type: FlightType.Cheap
 		}
 	];

@@ -6,11 +6,7 @@ import Typography from "@material-ui/core/Typography";
 import { Flight } from "../../../models/Flight";
 
 import { useStyles } from "./styles";
-import {
-	unixToMoment,
-	timeFormats,
-	diffTimeToHours
-} from "../../../services/dateService";
+import { unixToMoment, timeFormats } from "../../../services/dateService";
 
 interface IProps {
 	flight: Flight;
@@ -25,8 +21,7 @@ const FlightCard = (props: IProps) => {
 		<Card className={classes.root}>
 			<CardContent>
 				<Typography gutterBottom variant="h6">
-					{diffTimeToHours(flight.departureTime, flight.arrivalTime)}{" "}
-					hrs
+					{flight.durationHours} hrs
 				</Typography>
 				<Typography variant="h6">{flight.departure}</Typography>
 				<Typography component="p" color="textSecondary">

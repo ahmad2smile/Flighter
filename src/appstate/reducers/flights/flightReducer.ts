@@ -11,6 +11,7 @@ import { Flight } from "../../../models/Flight";
 import { FlightFilter } from "../../../models/FlightFilter";
 import { FlightType } from "../../../models/FlightType";
 import { filterFlights } from "./utils/filterFlights";
+import { sortFlights } from "./utils/sortFlights";
 
 export interface FlightState {
 	readonly flights: ReadonlyArray<Flight>;
@@ -40,10 +41,11 @@ export const flightsReducer = (
 			};
 		case FlightActionTypes.FLIGHT_GET_REQUEST_SUCCESS:
 			const flights = (action as FlightsGetSuccessAction).payload;
+			const sortedFlights = sortFlights(flights);
 			return {
 				...state,
-				flights,
-				unFilteredFlights: flights,
+				flights: sortedFlights,
+				unFilteredFlights: sortedFlights,
 				flightRequestState: RequestTypes.SUCCESS
 			};
 		case FlightActionTypes.FLIGHT_GET_REQUEST_ERROR:

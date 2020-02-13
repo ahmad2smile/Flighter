@@ -4,6 +4,7 @@ import {
 	RawBusinessFlight,
 	RawCheapFlight
 } from "../../../../models/RawFlight";
+import { diffTimeToHours } from "../../../../services/dateService";
 
 export const formatFlights = (type: FlightType) => (
 	flight: RawBusinessFlight | RawCheapFlight
@@ -33,6 +34,7 @@ export const formatFlights = (type: FlightType) => (
 		departureTime,
 		arrival,
 		departure,
+		durationHours: diffTimeToHours(departureTime, arrivalTime),
 		type
 	};
 };
