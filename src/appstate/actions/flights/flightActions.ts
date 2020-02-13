@@ -1,12 +1,14 @@
 import { IAction } from "../IAction";
 import { Flight } from "../../../models/Flight";
+import { FlightFilter } from "../../../models/FlightFilter";
 
 export enum FlightActionTypes {
 	FLIGHT_GET_REQUEST = "FLIGHT_GET_REQUEST",
 	FLIGHT_GET_REQUEST_SUCCESS = "FLIGHT_GET_REQUEST_SUCCESS",
 	FLIGHT_GET_BUSINESS_REQUEST_SUCCESS = "FLIGHT_GET_BUSINESS_REQUEST_SUCCESS",
 	FLIGHT_GET_CHEAP_REQUEST_SUCCESS = "FLIGHT_GET_CHEAP_REQUEST_SUCCESS",
-	FLIGHT_GET_REQUEST_ERROR = "FLIGHT_GET_REQUEST_ERROR"
+	FLIGHT_GET_REQUEST_ERROR = "FLIGHT_GET_REQUEST_ERROR",
+	FLIGHT_FILTER = "FLIGHT_FILTER"
 }
 
 export type FlightsGetAction = IAction<undefined, FlightActionTypes>;
@@ -28,11 +30,14 @@ export type FlightsCheapGetSuccessAction = IAction<
 
 export type FlightsGetErrorAction = IAction<string, FlightActionTypes>;
 
+export type FlightsFilterAction = IAction<FlightFilter, FlightActionTypes>;
+
 export type FlightsActions =
 	| FlightsGetAction
 	| FlightsBusinessGetSuccessAction
 	| FlightsCheapGetSuccessAction
-	| FlightsGetErrorAction;
+	| FlightsGetErrorAction
+	| FlightsFilterAction;
 
 export const flightsGetRequest = (): FlightsGetAction => {
 	return {
@@ -72,5 +77,14 @@ export const flightsGetError = (payload: string): FlightsGetErrorAction => {
 	return {
 		payload,
 		type: FlightActionTypes.FLIGHT_GET_REQUEST_ERROR
+	};
+};
+
+export const filterFlightsAction = (
+	payload: FlightFilter
+): FlightsFilterAction => {
+	return {
+		payload,
+		type: FlightActionTypes.FLIGHT_FILTER
 	};
 };
