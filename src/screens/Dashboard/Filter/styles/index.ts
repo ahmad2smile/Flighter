@@ -5,7 +5,8 @@ export const useStyles = makeStyles((theme: Theme) =>
 		root: {
 			display: "flex",
 			width: "90%",
-			margin: "0 auto"
+			margin: "0 auto",
+			flexWrap: "wrap"
 		},
 		search: {
 			flexGrow: 3
