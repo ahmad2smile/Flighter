@@ -20,4 +20,4 @@ jobs:
                   node-version: ${{ env.NODE_VERSION }}
             - name: install and build
               run: |
-                  npm run build
+                  npm i && npm run build
