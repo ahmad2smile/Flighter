@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import { connect, DispatchProp } from "react-redux";
+import { Link } from "react-router-dom";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 
@@ -41,7 +42,12 @@ const Dashboard = (props: IProps) => {
 
 	return (
 		<div>
-			<Typography variant="h5">Flights</Typography>
+			<div className={classes.header}>
+				<Typography variant="h5">Flights</Typography>
+				<Link to="/create" className={classes.createLink}>
+					Create
+				</Link>
+			</div>
 			<Filter
 				search={search}
 				onSearch={handleSearch}

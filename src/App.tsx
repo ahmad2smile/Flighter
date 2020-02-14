@@ -1,10 +1,13 @@
 import React from "react";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
+import { MuiPickersUtilsProvider } from "@material-ui/pickers";
+import MomentUtils from "@date-io/moment";
 
 import { store, persistor } from "./appstate/store/index";
 
-import Dashboard from "./screens/Dashboard/Dashboard";
+import MainRoute from "./routes";
+
 import { useStyles } from "./App.styles";
 
 const onBeforeLift = () => {
@@ -18,7 +21,9 @@ const App = () => {
 		<Provider store={store}>
 			<PersistGate onBeforeLift={onBeforeLift} persistor={persistor}>
 				<div className={classes.root}>
-					<Dashboard />
+					<MuiPickersUtilsProvider utils={MomentUtils}>
+						<MainRoute />
+					</MuiPickersUtilsProvider>
 				</div>
 			</PersistGate>
 		</Provider>

@@ -9,7 +9,7 @@ export default persistCombineReducers(
 	{
 		key: "root",
 		storage,
-		blacklist: ["form"]
+		blacklist: ["form", "flightForm"]
 	},
 	{
 		form: formReducer,
