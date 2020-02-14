@@ -14,5 +14,10 @@ export const useStyles = makeStyles(theme => ({
 	flights: {
 		display: "flex",
 		justifyContent: "center"
+	},
+	error: {
+		"& p": {
+			textAlign: "center"
+		}
 	}
 }));

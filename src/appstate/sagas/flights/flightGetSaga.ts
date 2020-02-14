@@ -9,7 +9,8 @@ import {
 
 import {
 	getBusinessFlights,
-	getCheapFlights
+	getCheapFlights,
+	apiErrorHandler
 } from "../../../services/dataService";
 
 import { formatFlights } from "./utils/formatFlights";
@@ -31,7 +32,7 @@ export function* flightGetSaga() {
 
 		yield put(flightsGetSuccess([...businessFlights, ...cheapFlights]));
 	} catch (err) {
-		yield put(flightsGetError(err));
+		yield put(flightsGetError(apiErrorHandler(err)));
 		yield delay(5000);
 		yield put(flightsGetClearError());
 	}

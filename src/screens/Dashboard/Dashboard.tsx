@@ -79,7 +79,7 @@ const Dashboard = (props: IProps) => {
 				onFlightType={handleFlightType}
 			/>
 			{error && (
-				<div>
+				<div className={classes.error}>
 					<FormHelperText error>{flightRequestError}</FormHelperText>
 				</div>
 			)}
