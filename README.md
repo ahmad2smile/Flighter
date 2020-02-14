@@ -1,7 +1,4 @@
-# Flighter
-
-<img src="https://github.com/ahmad2smile/Flighter/workflows/Build/badge.svg" />
-<img src="https://github.com/ahmad2smile/Flighter/workflows/Tests/badge.svg" />
+# Flighter [![Build Status](https://github.com/ahmad2smile/Flighter/workflows/Build/badge.svg)]() [![Tests](https://github.com/ahmad2smile/Flighter/workflows/Tests/badge.svg)]()
 
 ## Description
 
