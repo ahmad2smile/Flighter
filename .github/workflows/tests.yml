@@ -1,4 +1,4 @@
-name: Test
+name: Tests
 
 on:
     push:
@@ -10,7 +10,7 @@ env:
 
 jobs:
     build:
-        name: Test
+        name: Tests
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@master
@@ -20,4 +20,5 @@ jobs:
                   node-version: ${{ env.NODE_VERSION }}
             - name: install and test
               run: |
-                  npm i && npm run test
+                  npm i
+                  CI=true npm run test
