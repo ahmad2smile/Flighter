@@ -53,9 +53,11 @@ export const flightsReducer = (
 		case FlightGetActionTypes.FLIGHT_GET_REQUEST_SUCCESS:
 			const flights = (action as FlightsGetSuccessAction).payload;
 			const sortedFlights = sortFlights(flights);
+			const filteredFlights = filterFlights(state.filter, sortedFlights);
+
 			return {
 				...state,
-				flights: sortedFlights,
+				flights: filteredFlights,
 				unFilteredFlights: sortedFlights,
 				flightRequestState: RequestTypes.SUCCESS
 			};

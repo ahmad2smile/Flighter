@@ -9,7 +9,7 @@ import { IState } from "../../appstate/IState";
 import { FlightState } from "../../appstate/reducers/flights/flightReducer";
 import {
 	flightsGetRequest,
-	filterFlightsAction,
+	flightsFilterAction,
 	flightsGetClearError
 } from "../../appstate/actions/flights/flightGetActions";
 
@@ -20,11 +20,13 @@ import Filter from "./Filter/Filter";
 
 import { FlightType } from "../../models/FlightType";
 import { RequestTypes } from "../../appstate/sagas/RequestTypes";
+import { useParamsFilter } from "./utils/paramsFilterHook";
 
 interface IProps extends DispatchProp, FlightState {}
 
 const Dashboard = (props: IProps) => {
 	const classes = useStyles();
+	const [paramsFilter, setParamsFilter] = useParamsFilter();
 
 	const {
 		flights,
@@ -41,16 +43,26 @@ const Dashboard = (props: IProps) => {
 
 	useEffect(() => {
 		dispatch(flightsGetRequest());
+		dispatch(flightsFilterAction(paramsFilter)); // Local state filter only
 
 		return () => {
 			dispatch(flightsGetClearError()); // Clean up
 		};
 	}, []);
 
-	const handleSearch = (_search: string) =>
-		dispatch(filterFlightsAction({ search: _search, type }));
-	const handleFlightType = (_flightType: FlightType) =>
-		dispatch(filterFlightsAction({ search, type: _flightType }));
+	const handleSearch = (_search: string) => {
+		const filter = { search: _search, type };
+
+		setParamsFilter(filter);
+		dispatch(flightsFilterAction(filter));
+	};
+
+	const handleFlightType = (_flightType: FlightType) => {
+		const filter = { search, type: _flightType };
+
+		setParamsFilter(filter);
+		dispatch(flightsFilterAction(filter));
+	};
 
 	return (
 		<div>

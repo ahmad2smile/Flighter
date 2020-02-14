@@ -81,7 +81,7 @@ export const flightsGetClearError = (): FlightsGetClearErrorAction => {
 	};
 };
 
-export const filterFlightsAction = (
+export const flightsFilterAction = (
 	payload: FlightFilter
 ): FlightsFilterAction => {
 	return {
