@@ -37,6 +37,7 @@ const FlightForm = (props: IProps) => {
 		return () => {
 			dispatch(flightsCreateClearError()); // Clean up
 		};
+		// eslint-disable-next-line
 	}, []);
 
 	const handleSubmit = (flight: Flight) => {

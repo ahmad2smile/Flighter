@@ -42,6 +42,7 @@ const Form = (props: IProps) => {
 			arrivalTime: getNowUnix(),
 			type: FlightType.Business
 		});
+		// eslint-disable-next-line
 	}, []);
 
 	return (

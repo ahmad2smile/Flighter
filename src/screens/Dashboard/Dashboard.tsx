@@ -48,6 +48,7 @@ const Dashboard = (props: IProps) => {
 		return () => {
 			dispatch(flightsGetClearError()); // Clean up
 		};
+		// eslint-disable-next-line
 	}, []);
 
 	const handleSearch = (_search: string) => {
