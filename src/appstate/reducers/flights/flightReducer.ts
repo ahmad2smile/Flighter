@@ -92,10 +92,10 @@ export const flightsReducer = (
 			return {
 				...state,
 				unFilteredFlights: state.unFilteredFlights.filter(
-					f => f.id === failedCreateFlight.id
+					f => f.id !== failedCreateFlight.id
 				),
 				flights: state.flights.filter(
-					f => f.id === failedCreateFlight.id
+					f => f.id !== failedCreateFlight.id
 				)
 			};
 		case FlightCreateActionTypes.FLIGHT_CREATE_REQUEST_SUCCESS:
