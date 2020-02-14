@@ -4,7 +4,8 @@ import {
 	RawBusinessFlight,
 	RawCheapFlight
 } from "../../../../models/RawFlight";
-import { diffTimeToHours } from "../../../../services/dateService";
+import { diffUnixTime } from "../../../../services/dateService";
+import { getUniqueKey } from "../../../../utils/uniqueKeyGenerator";
 
 export const formatFlights = (type: FlightType) => (
 	flight: RawBusinessFlight | RawCheapFlight
@@ -30,11 +31,12 @@ export const formatFlights = (type: FlightType) => (
 	}
 
 	return {
+		id: getUniqueKey(),
 		arrivalTime,
 		departureTime,
 		arrival,
 		departure,
-		durationHours: diffTimeToHours(departureTime, arrivalTime),
+		durationHours: diffUnixTime(departureTime, arrivalTime),
 		type
 	};
 };

@@ -1,10 +1,11 @@
-import { call, takeLatest, put, all } from "redux-saga/effects";
+import { call, takeLatest, put, all, delay } from "redux-saga/effects";
 
 import {
 	flightsGetSuccess,
 	flightsGetError,
-	FlightActionTypes
-} from "../../actions/flights/flightActions";
+	FlightGetActionTypes,
+	flightsGetClearError
+} from "../../actions/flights/flightGetActions";
 
 import {
 	getBusinessFlights,
@@ -31,9 +32,11 @@ export function* flightGetSaga() {
 		yield put(flightsGetSuccess([...businessFlights, ...cheapFlights]));
 	} catch (err) {
 		yield put(flightsGetError(err));
+		yield delay(5000);
+		yield put(flightsGetClearError());
 	}
 }
 
 export function* flightGetSagaWatcher() {
-	yield takeLatest(FlightActionTypes.FLIGHT_GET_REQUEST, flightGetSaga);
+	yield takeLatest(FlightGetActionTypes.FLIGHT_GET_REQUEST, flightGetSaga);
 }

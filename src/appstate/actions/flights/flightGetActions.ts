@@ -2,47 +2,41 @@ import { IAction } from "../IAction";
 import { Flight } from "../../../models/Flight";
 import { FlightFilter } from "../../../models/FlightFilter";
 
-export enum FlightActionTypes {
+export enum FlightGetActionTypes {
 	FLIGHT_GET_REQUEST = "FLIGHT_GET_REQUEST",
 	FLIGHT_GET_REQUEST_SUCCESS = "FLIGHT_GET_REQUEST_SUCCESS",
 	FLIGHT_GET_BUSINESS_REQUEST_SUCCESS = "FLIGHT_GET_BUSINESS_REQUEST_SUCCESS",
 	FLIGHT_GET_CHEAP_REQUEST_SUCCESS = "FLIGHT_GET_CHEAP_REQUEST_SUCCESS",
 	FLIGHT_GET_REQUEST_ERROR = "FLIGHT_GET_REQUEST_ERROR",
+	FLIGHT_GET_CLEAR_ERROR = "FLIGHT_GET_CLEAR_ERROR",
 	FLIGHT_FILTER = "FLIGHT_FILTER"
 }
 
-export type FlightsGetAction = IAction<undefined, FlightActionTypes>;
-
+export type FlightsGetAction = IAction<undefined, FlightGetActionTypes>;
 export type FlightsGetSuccessAction = IAction<
 	ReadonlyArray<Flight>,
-	FlightActionTypes
+	FlightGetActionTypes
 >;
-
 export type FlightsBusinessGetSuccessAction = IAction<
 	ReadonlyArray<Flight>,
-	FlightActionTypes
+	FlightGetActionTypes
 >;
-
 export type FlightsCheapGetSuccessAction = IAction<
 	ReadonlyArray<Flight>,
-	FlightActionTypes
+	FlightGetActionTypes
+>;
+export type FlightsGetErrorAction = IAction<string, FlightGetActionTypes>;
+export type FlightsGetClearErrorAction = IAction<
+	undefined,
+	FlightGetActionTypes
 >;
 
-export type FlightsGetErrorAction = IAction<string, FlightActionTypes>;
-
-export type FlightsFilterAction = IAction<FlightFilter, FlightActionTypes>;
-
-export type FlightsActions =
-	| FlightsGetAction
-	| FlightsBusinessGetSuccessAction
-	| FlightsCheapGetSuccessAction
-	| FlightsGetErrorAction
-	| FlightsFilterAction;
+export type FlightsFilterAction = IAction<FlightFilter, FlightGetActionTypes>;
 
 export const flightsGetRequest = (): FlightsGetAction => {
 	return {
 		payload: undefined,
-		type: FlightActionTypes.FLIGHT_GET_REQUEST
+		type: FlightGetActionTypes.FLIGHT_GET_REQUEST
 	};
 };
 
@@ -51,7 +45,7 @@ export const flightsGetSuccess = (
 ): FlightsGetSuccessAction => {
 	return {
 		payload,
-		type: FlightActionTypes.FLIGHT_GET_REQUEST_SUCCESS
+		type: FlightGetActionTypes.FLIGHT_GET_REQUEST_SUCCESS
 	};
 };
 
@@ -60,7 +54,7 @@ export const flightsBusinessGetSuccess = (
 ): FlightsBusinessGetSuccessAction => {
 	return {
 		payload,
-		type: FlightActionTypes.FLIGHT_GET_BUSINESS_REQUEST_SUCCESS
+		type: FlightGetActionTypes.FLIGHT_GET_BUSINESS_REQUEST_SUCCESS
 	};
 };
 
@@ -69,14 +63,21 @@ export const flightsCheapGetSuccess = (
 ): FlightsCheapGetSuccessAction => {
 	return {
 		payload,
-		type: FlightActionTypes.FLIGHT_GET_CHEAP_REQUEST_SUCCESS
+		type: FlightGetActionTypes.FLIGHT_GET_CHEAP_REQUEST_SUCCESS
 	};
 };
 
 export const flightsGetError = (payload: string): FlightsGetErrorAction => {
 	return {
 		payload,
-		type: FlightActionTypes.FLIGHT_GET_REQUEST_ERROR
+		type: FlightGetActionTypes.FLIGHT_GET_REQUEST_ERROR
+	};
+};
+
+export const flightsGetClearError = (): FlightsGetClearErrorAction => {
+	return {
+		payload: undefined,
+		type: FlightGetActionTypes.FLIGHT_GET_CLEAR_ERROR
 	};
 };
 
@@ -85,6 +86,6 @@ export const filterFlightsAction = (
 ): FlightsFilterAction => {
 	return {
 		payload,
-		type: FlightActionTypes.FLIGHT_FILTER
+		type: FlightGetActionTypes.FLIGHT_FILTER
 	};
 };

@@ -2,28 +2,38 @@ import React from "react";
 import { DateTimePicker } from "@material-ui/pickers";
 import { WrappedFieldProps } from "redux-form";
 import { MaterialUiPickersDate } from "@material-ui/pickers/typings/date";
+import FormHelperText from "@material-ui/core/FormHelperText";
+import { unixToJSDate, momentToUnix } from "../../services/dateService";
+import { Moment } from "moment";
+
+import { useStyles } from "./styles";
 
 const DateField = (props: WrappedFieldProps) => {
+	const classes = useStyles();
+
 	const {
 		meta: { submitting, error, touched },
-		input: { onBlur, value, ...inputProps },
+		input: { onBlur, onFocus, value, ...inputProps },
 		...others
 	} = props;
 
-	const onChange = (date: MaterialUiPickersDate) => {
-		inputProps.onChange(date);
-	};
+	const onChange = (date: MaterialUiPickersDate) =>
+		inputProps.onChange(momentToUnix(date as Moment));
 
 	return (
-		<DateTimePicker
-			{...inputProps}
-			{...others}
-			value={value ? new Date(value) : null}
-			disabled={submitting}
-			onBlur={() => onBlur(value ? new Date(value).toISOString() : null)}
-			error={error && touched}
-			onChange={onChange}
-		/>
+		<div className={classes.root}>
+			<DateTimePicker
+				{...others}
+				value={value ? unixToJSDate(value) : null}
+				disabled={submitting}
+				onBlur={() => onBlur(value)}
+				error={error && touched}
+				invalidDateMessage={error}
+				invalidLabel={error}
+				onChange={onChange}
+			/>
+			{error && touched && <FormHelperText error>{error}</FormHelperText>}
+		</div>
 	);
 };
 

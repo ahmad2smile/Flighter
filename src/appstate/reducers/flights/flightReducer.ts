@@ -2,11 +2,17 @@ import { Action } from "redux";
 
 import { RequestTypes } from "../../sagas/RequestTypes";
 import {
-	FlightActionTypes,
+	FlightGetActionTypes,
 	FlightsGetSuccessAction,
 	FlightsGetErrorAction,
 	FlightsFilterAction
-} from "../../actions/flights/flightActions";
+} from "../../actions/flights/flightGetActions";
+import {
+	FlightCreateActionTypes,
+	FlightsCreateAction,
+	FlightsCreateUndoAction,
+	FlightsCreateErrorAction
+} from "../../actions/flights/flightCreateActions";
 import { Flight } from "../../../models/Flight";
 import { FlightFilter } from "../../../models/FlightFilter";
 import { FlightType } from "../../../models/FlightType";
@@ -18,6 +24,8 @@ export interface FlightState {
 	readonly unFilteredFlights: ReadonlyArray<Flight>;
 	readonly flightRequestState: RequestTypes;
 	readonly flightRequestError: string;
+	readonly flightCreateRequestState: RequestTypes;
+	readonly flightCreateRequestError: string;
 	readonly filter: FlightFilter;
 }
 
@@ -26,20 +34,23 @@ export const initialState: FlightState = {
 	unFilteredFlights: [],
 	flightRequestState: RequestTypes.IDLE,
 	flightRequestError: "",
+	flightCreateRequestState: RequestTypes.IDLE,
+	flightCreateRequestError: "",
 	filter: { search: "", type: FlightType.All }
 };
 
 export const flightsReducer = (
 	state: FlightState = initialState,
-	action: Action<FlightActionTypes>
+	action: Action<FlightGetActionTypes | FlightCreateActionTypes>
 ): FlightState => {
 	switch (action.type) {
-		case FlightActionTypes.FLIGHT_GET_REQUEST:
+		case FlightGetActionTypes.FLIGHT_GET_REQUEST:
 			return {
 				...state,
-				flightRequestState: RequestTypes.REQUESTED
+				flightRequestState: RequestTypes.REQUESTED,
+				flightRequestError: ""
 			};
-		case FlightActionTypes.FLIGHT_GET_REQUEST_SUCCESS:
+		case FlightGetActionTypes.FLIGHT_GET_REQUEST_SUCCESS:
 			const flights = (action as FlightsGetSuccessAction).payload;
 			const sortedFlights = sortFlights(flights);
 			return {
@@ -48,13 +59,64 @@ export const flightsReducer = (
 				unFilteredFlights: sortedFlights,
 				flightRequestState: RequestTypes.SUCCESS
 			};
-		case FlightActionTypes.FLIGHT_GET_REQUEST_ERROR:
+		case FlightGetActionTypes.FLIGHT_GET_REQUEST_ERROR:
 			return {
 				...state,
 				flightRequestError: (action as FlightsGetErrorAction).payload,
 				flightRequestState: RequestTypes.ERROR
 			};
-		case FlightActionTypes.FLIGHT_FILTER:
+		case FlightGetActionTypes.FLIGHT_GET_CLEAR_ERROR:
+			return {
+				...state,
+				flightRequestError: "",
+				flightRequestState: RequestTypes.IDLE
+			};
+		case FlightCreateActionTypes.FLIGHT_CREATE_REQUEST:
+			const newFlight = (action as FlightsCreateAction).payload;
+			const newFlights = sortFlights([
+				...state.unFilteredFlights,
+				newFlight
+			]);
+
+			return {
+				...state,
+				flights: newFlights,
+				unFilteredFlights: newFlights,
+				flightCreateRequestState: RequestTypes.REQUESTED,
+				flightCreateRequestError: ""
+			};
+		case FlightCreateActionTypes.FLIGHT_CREATE_UNDO_REQUEST:
+			const failedCreateFlight = (action as FlightsCreateUndoAction)
+				.payload;
+
+			return {
+				...state,
+				unFilteredFlights: state.unFilteredFlights.filter(
+					f => f.id === failedCreateFlight.id
+				),
+				flights: state.flights.filter(
+					f => f.id === failedCreateFlight.id
+				)
+			};
+		case FlightCreateActionTypes.FLIGHT_CREATE_REQUEST_SUCCESS:
+			return {
+				...state,
+				flightCreateRequestState: RequestTypes.SUCCESS
+			};
+		case FlightCreateActionTypes.FLIGHT_CREATE_REQUEST_ERROR:
+			return {
+				...state,
+				flightCreateRequestError: (action as FlightsCreateErrorAction)
+					.payload,
+				flightCreateRequestState: RequestTypes.ERROR
+			};
+		case FlightCreateActionTypes.FLIGHT_CREATE_CLEAR_ERROR:
+			return {
+				...state,
+				flightCreateRequestError: "",
+				flightCreateRequestState: RequestTypes.IDLE
+			};
+		case FlightGetActionTypes.FLIGHT_FILTER:
 			const filter = (action as FlightsFilterAction).payload;
 			return {
 				...state,
@@ -62,6 +124,6 @@ export const flightsReducer = (
 				flights: filterFlights(filter, state.unFilteredFlights)
 			};
 		default:
-			return initialState;
+			return state;
 	}
 };

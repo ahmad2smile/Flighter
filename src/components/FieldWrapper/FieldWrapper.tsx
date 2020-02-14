@@ -14,8 +14,13 @@ const FieldWrapper = (props: IProps) => {
 	return (
 		<Field
 			name={name}
-			component={({ input, ...rest }: IRenderProps) => (
-				<RenderProps name={name} {...input} inputProps={rest} />
+			component={({ input, meta: { error, touched } }: IRenderProps) => (
+				<RenderProps
+					name={name}
+					{...input}
+					error={error && touched}
+					helperText={touched && error}
+				/>
 			)}
 		/>
 	);

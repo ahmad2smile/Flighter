@@ -1,6 +1,6 @@
 export enum RequestTypes {
-	IDLE,
-	REQUESTED,
-	SUCCESS,
-	ERROR
+	IDLE = "IDLE",
+	REQUESTED = "REQUESTED",
+	SUCCESS = "SUCCESS",
+	ERROR = "ERROR"
 }

@@ -1,40 +1,45 @@
 import React, { useEffect } from "react";
 import { Field, reduxForm, InjectedFormProps } from "redux-form";
-import { Moment } from "moment";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
 import InputLabel from "@material-ui/core/InputLabel";
 import FormControl from "@material-ui/core/FormControl";
+import FormHelperText from "@material-ui/core/FormHelperText";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 import { FlightType } from "../../../models/FlightType";
 
 import FieldWrapper from "../../../components/FieldWrapper/FieldWrapper";
 import DateField from "../../../components/DateField/DateField";
 
-import { getNow } from "../../../services/dateService";
+import { getNowUnix } from "../../../services/dateService";
+
+import { Flight } from "../../../models/Flight";
+import { validateFlightForm } from "../../../services/validationService";
+
+import { RequestTypes } from "../../../appstate/sagas/RequestTypes";
 
 import { useStyles } from "./styles";
 
-export interface FormValues {
-	departure: string;
-	arrival: string;
-	departureTime: Moment;
-	arrivalTime: Moment;
-	type: string;
+interface IProps extends InjectedFormProps<Flight> {
+	requestError: string;
+	requestState: RequestTypes;
 }
-
-interface IProps extends InjectedFormProps<FormValues> {}
 
 const Form = (props: IProps) => {
 	const classes = useStyles();
-	const { handleSubmit, initialize } = props;
+	const { handleSubmit, initialize, requestError, requestState } = props;
+
+	const loading = !requestError && requestState === RequestTypes.REQUESTED;
+
+	const error = requestError && !loading;
 
 	useEffect(() => {
 		initialize({
-			departureTime: getNow(),
-			arrivalTime: getNow(),
+			departureTime: getNowUnix(),
+			arrivalTime: getNowUnix(),
 			type: FlightType.Business
 		});
 	}, []);
@@ -66,10 +71,10 @@ const Form = (props: IProps) => {
 				component={DateField}
 			/>
 			<FieldWrapper name="type">
-				{renderProps => (
+				{({ helperText, ...rest }) => (
 					<FormControl>
 						<InputLabel id="flight-type">Flight Type</InputLabel>
-						<Select labelId="flight-type" {...renderProps}>
+						<Select labelId="flight-type" {...rest}>
 							<MenuItem value={FlightType.Business}>
 								Business
 							</MenuItem>
@@ -78,13 +83,26 @@ const Form = (props: IProps) => {
 					</FormControl>
 				)}
 			</FieldWrapper>
-			<Button type="submit" variant="outlined" color="primary">
-				Submit
+			{error && (
+				<div>
+					<FormHelperText error>{requestError}</FormHelperText>
+				</div>
+			)}
+			<Button
+				disabled={loading}
+				type="submit"
+				variant="outlined"
+				color="primary"
+			>
+				{loading ? <CircularProgress size={20} /> : "Submit"}
 			</Button>
 		</form>
 	);
 };
 
-export default reduxForm<FormValues>({
-	form: "flightForm"
-})(Form);
+export default reduxForm<Flight, Pick<IProps, "requestError" | "requestState">>(
+	{
+		form: "flightForm",
+		validate: validateFlightForm
+	}
+)(Form);

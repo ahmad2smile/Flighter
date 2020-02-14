@@ -3,13 +3,15 @@ import { connect, DispatchProp } from "react-redux";
 import { Link } from "react-router-dom";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
+import FormHelperText from "@material-ui/core/FormHelperText";
 
 import { IState } from "../../appstate/IState";
 import { FlightState } from "../../appstate/reducers/flights/flightReducer";
 import {
 	flightsGetRequest,
-	filterFlightsAction
-} from "../../appstate/actions/flights/flightActions";
+	filterFlightsAction,
+	flightsGetClearError
+} from "../../appstate/actions/flights/flightGetActions";
 
 import FlightCard from "./FlightCard/FlightCard";
 
@@ -17,23 +19,33 @@ import { useStyles } from "./styles";
 import Filter from "./Filter/Filter";
 
 import { FlightType } from "../../models/FlightType";
+import { RequestTypes } from "../../appstate/sagas/RequestTypes";
 
-interface IProps extends DispatchProp {
-	flightState: FlightState;
-}
+interface IProps extends DispatchProp, FlightState {}
 
 const Dashboard = (props: IProps) => {
 	const classes = useStyles();
 
-	const { flightState, dispatch } = props;
 	const {
 		flights,
-		filter: { search, type }
-	} = flightState;
+		filter: { search, type },
+		flightRequestError,
+		flightRequestState,
+		dispatch
+	} = props;
+
+	const loading =
+		!flightRequestError && flightRequestState === RequestTypes.REQUESTED;
+
+	const error = flightRequestError && !loading;
 
 	useEffect(() => {
 		dispatch(flightsGetRequest());
-	}, [dispatch]);
+
+		return () => {
+			dispatch(flightsGetClearError()); // Clean up
+		};
+	}, []);
 
 	const handleSearch = (_search: string) =>
 		dispatch(filterFlightsAction({ search: _search, type }));
@@ -54,6 +66,11 @@ const Dashboard = (props: IProps) => {
 				type={type}
 				onFlightType={handleFlightType}
 			/>
+			{error && (
+				<div>
+					<FormHelperText error>{flightRequestError}</FormHelperText>
+				</div>
+			)}
 			<Grid container className={classes.root}>
 				<Grid container item xs={12} className={classes.flights}>
 					{flights.map((f, i) => (
@@ -65,6 +82,13 @@ const Dashboard = (props: IProps) => {
 	);
 };
 
-export default connect(({ flightState }: IState) => ({
-	flightState
-}))(Dashboard);
+export default connect(
+	({
+		flightState: { flights, filter, flightRequestError, flightRequestState }
+	}: IState) => ({
+		flights,
+		filter,
+		flightRequestError,
+		flightRequestState
+	})
+)(Dashboard);
